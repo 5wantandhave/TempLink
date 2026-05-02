@@ -146,16 +146,30 @@ npm run dev
 # 打开 http://localhost:8788
 ```
 
-> 本地开发也需要 KV，建议通过本地环境变量或本地 Wrangler 配置绑定，不要把真实 namespace id 直接写死到仓库配置里。
+> 本地开发使用 Wrangler 本地 KV 模拟，无需额外配置。
 
 ---
 
 ## 🚀 部署到 Cloudflare Pages
 
-1. 在 Cloudflare 中创建 KV namespace
-2. 在 **Pages 项目 → Settings → Functions → KV namespace bindings** 中绑定：
-   - Variable name: `KV`
-   - KV namespace: 选择你创建的 namespace
+1. 创建 KV namespace：
+
+```bash
+npx wrangler kv namespace create "KV"
+```
+
+输出类似 `id = "a1b2c3d4..."`，复制该 ID。
+
+2. 将 ID 写入 `wrangler.toml`：
+
+```toml
+[[kv_namespaces]]
+binding = "KV"
+id = "你刚才拿到的 ID"
+```
+
+> KV namespace ID 是标识符而非密钥，写入仓库是安全的。他人拿到 ID 无法访问你的 KV 数据。
+
 3. 确认 Pages 构建输出目录为 `dist`
 4. 执行生产构建：
 
@@ -168,8 +182,6 @@ npm run build
 * 页面访问根路径发送内容
 * `/ABC123` 访问已有内容
 * `/api/qr/ABC123` 获取二维码
-
-> 不建议把真实 KV namespace id 写入 `wrangler.toml` 并提交到仓库，推荐在 Pages Dashboard 或环境中配置绑定。
 
 ---
 

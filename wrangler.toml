@@ -1,3 +1,7 @@
 name = "templink"
 compatibility_date = "2024-12-01"
 pages_build_output_dir = "dist"
+
+[[kv_namespaces]]
+binding = "KV"
+id = "79e566527870460295df21626b45d0a3"
